@@ -1,4 +1,5 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const chalk = require('chalk')
 const path = require('path')
 const {addNote, getNotes, removeNote, changeNote} = require('./notes.controller')
@@ -13,7 +14,7 @@ app.use(express.static(path.resolve(__dirname, 'public')))
 app.use(express.urlencoded({
   extended: true
 }))
-app.use(express.json())
+app.use(express.json());
 
 app.get('/', async (req, res) => {
   res.render('index', {
@@ -41,10 +42,10 @@ app.delete('/:id', async (req, res) => {
   })
 })
 
-app.put('/', async (req, res) => {
-  console.log(req.params.id)
-  console.log(req.params.title)
-  await changeNote(req.params.id,req.params.title)
+
+app.put('/:id',async (req, res) => {
+  console.log('body:',req.body);
+  await changeNote({id: req.params.id,title: req.body.title})
   res.render('index', {
     title: 'Express App',
     notes: await getNotes(),

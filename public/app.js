@@ -8,18 +8,12 @@ document.addEventListener('click', event => {
   }
   
   if (event.target.dataset.type === 'change') {
-    const id = event.target.dataset.id
-    const title = prompt("Введите новую заметку");
-    console.log('title: ',title);
-    console.log('json: ',JSON.stringify(title));
-    console.log('change: ',change(id,title))
-    // if(title){
-    //   try{
-    //     change(id,title) 
-    //   } catch (error) {
-    //     console.log(error)
-    //   }           
-    // }
+    const id = event.target.dataset.id;
+    const newTitle = prompt("Введите новую заметку");
+    console.log('title:',newTitle);
+    change({id: id, title: newTitle}).then(()=> {
+      event.target.closest('li').querySelector(".note").innerText = newTitle;
+    })
   }
 })
 
@@ -27,10 +21,12 @@ async function remove(id) {
   await fetch(`/${id}`, {method: 'DELETE'})
 }
 
-async function change(id,title){
-  const response = await fetch(`/${id}`, {method: "PUT", header: {"Content-Type": "application/json"}, body: JSON.stringify(title)})
-  console.log('response: ',response);
-  console.log(response.status)
-  const result = await response.json()
-  return result
+async function change(data){
+  console.log(data);
+  console.log(JSON.stringify(data));
+  await fetch(`/${data.id}`, {
+    method: "PUT", 
+    header: {"Content-Type": "application/json"}, 
+    body: JSON.stringify(data)
+  });   
 }
