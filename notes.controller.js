@@ -26,7 +26,7 @@ async function saveNotes(notes) {
   await fs.writeFile(notesPath, JSON.stringify(notes))
 }
 
-async function listNotes() {
+async function printNotes() {
   const notes = await getNotes()
 
   console.log(chalk.bgBlue('Here is the list of notes:'))
@@ -35,14 +35,26 @@ async function listNotes() {
   })
 }
 
-async function removeNotes(id){
-    const notes = await getNotes()
-    const newnotes = notes.filter((item) => {return item.id!==String(id)})
-    console.log(newnotes)
-    saveNotes(newnotes)
-    listNotes();
+async function removeNote(id) {
+  const notes = await getNotes()
+
+  const filtered = notes.filter(note => note.id !== id)
+  console.log(filtered)
+
+  await saveNotes(filtered)
+  console.log(chalk.red(`Note with id="${id}" has been removed.`))
+}
+
+async function changeNote(id, title) {
+  const notes = await getNotes()
+  console.log(notes)
+  const indexId = notes.indexOf((note) => note.id === id)
+  console.log(indexId)
+  notes[indexId].title = title
+  await saveNotes(notes)
+  console.log(chalk.red(`Note with id="${id}" has been changed.`))
 }
 
 module.exports = {
-  addNote, listNotes, removeNotes
+  addNote, getNotes, removeNote, changeNote
 }
