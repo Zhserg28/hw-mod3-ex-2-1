@@ -26,7 +26,7 @@ async function change(data){
   console.log(JSON.stringify(data));
   await fetch(`/${data.id}`, {
     method: "PUT", 
-    header: {"Content-Type": "application/json"}, 
+    headers: {"Content-Type": "application/json"}, 
     body: JSON.stringify(data)
   });   
 }
